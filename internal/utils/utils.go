@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/UpCloudLtd/upcloud-go-api/v8/upcloud"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -129,4 +130,22 @@ func randomSuffix(n int) string {
 
 func WithRandomSuffix(input string) string {
 	return input + "-" + randomSuffix(5)
+}
+
+func ValueOrEmpty[T any](p *T) T {
+	var v T
+	if p != nil {
+		v = *p
+	}
+
+	return v
+}
+
+func ValueStringOrNil(v types.String) *string {
+	if v.IsNull() || v.IsUnknown() {
+		return nil
+	}
+
+	s := v.ValueString()
+	return &s
 }
